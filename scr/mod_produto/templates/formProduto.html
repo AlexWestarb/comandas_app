@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Produto{% endblock %}
+{% block content %}
+<form name="formAdicionar" id="formAdicionar" action method="POST">
+    <h1>Produto</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" name="nome" id="nome" value placeholder="Nome do Produto" maxlength="100" autofocus required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <input type="text" name="descricao" id="descricao" value placeholder="Descrição" maxlength="200" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="valor_unitario">Valor Unitário</label>
+                <input type="text" name="valor_unitario" id="valor_unitario" value placeholder="Valor Unitário" pattern="[0-9]{1,11}(\.[0-9]{1,2})?" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="foto">Foto</label>
+                <input type="text" name="foto" id="foto" value placeholder="Foto" maxlength="200" required class="form-control">
+            </div>
+        </div>
+    </div>
+    <button type='submit' name='salvaUsuarioDB' id='salvaUsuarioDB' class="btn btn-primary"><i class='fas fa-save'></i> Salvar</button>
+</form>
+{% endblock %}
