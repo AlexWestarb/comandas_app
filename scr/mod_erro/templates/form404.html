@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h1 class="display-4">Página não encontrada!</h1>
+    <h3>Favor verificar se o endereço digitado está correto.</h3>
+    <figure>
+        <img src="{{ url_for('static', filename='erro-404.png') }}" alt="Erro 404" class="img-fluid">
+    </figure>
+    <p>{{ erroHttp }}</p>
+</div>
+{% endblock %}
