@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %} - Alexander</title>
+        {% block style %}{% endblock %}
+        <link rel="stylesheet"
+            href="{{ url_for('static', filename='bootstrap-5.3.3-dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet"
+            href="{{ url_for('static', filename='fontawesome-free-6.5.2-web/css/all.min.css') }}">
+        <link rel="shortcut icon"
+            href="{{ url_for('static', filename='favicon.ico') }}">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f5f5f5;
+            }
+            
+           .nav-link {
+                color: #333;
+            }
+            
+           .nav-link:hover {
+                color: #337ab7;
+            }
+            
+           .footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                background-color: #333;
+                color: #fff;
+                padding: 10px;
+                text-align: center;
+            }
+            
+           .container-fluid {
+                padding-bottom: 50px; /* altura do footer */
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url_for('index.formIndex') }}">Alexander</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-center w-100" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('index.formIndex') }}"><i class="fas fa-home"></i> HOME</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('funcionario.formListaFuncionario') }}"><i class="fas fa-cart-arrow-down"></i>FUNCIONÁRIOS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('cliente.formListaCliente') }}"><i class="fas fa-users"></i> CLIENTES</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('produto.formListaProduto') }}"><i class="fas fa-pizza-slice"></i> PRODUTOS</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid mt-3">
+            {% block content %}{% endblock %}
+            <br><br><br>
+        </div>
+
+        <footer class="footer">
+            <a href="{{ url_for('index.formIndex') }}">&copy; 2024 by
+                Alexander</a>
+        </footer>
+
+        {% block js %}{% endblock %}
+
+        {% if request.args.get('msg'): %}
+        <h3>{{ request.args.get('msg') }}</h3><br>
+        {% elif msg: %}
+        <h3>{{ msg }}</h3><br>
+        {% elif request.args.get('msgErro'): %}
+        <h3>{{ request.args.get('msgErro') }}</h3><br>
+        {% elif msgErro: %}
+        <h3>{{ msgErro }}</h3><br>
+        {% endif %}
+
+        <script
+            src="{{ url_for('static', filename='bootstrap-5.3.3-dist/js/bootstrap.min.js') }}"></script>
+        <script
+            src="{{ url_for('static', filename='fontawesome-free-6.5.2-web/js/all.js') }}"></script>
+    </body>
+</html>
