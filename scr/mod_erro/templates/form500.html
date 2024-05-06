@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Internal server error{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h1 class="display-4">Erro Interno do Servidor!</h1>
+    <h3>O servidor encontrou uma situação com a qual não sabe lidar.</h3>
+    <figure>
+        <img src="{{ url_for('static', filename='erro-500.png') }}" alt="Erro 500" class="img-fluid">
+    </figure>
+    <p>{{ erroHttp }}</p>
+</div>
+{% endblock %}
