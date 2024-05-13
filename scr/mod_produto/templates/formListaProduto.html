@@ -19,15 +19,19 @@
       </tr>
     </thead>
     <tbody>
+      {% if result %}
+      {% for row in result %}
       <tr>
-        <th scope="row">...</th>
-        <td>...</td>
-        <td>...</td>
-        <td>...</td>
-        <td>...</td>
+        <th scope="row"> {{ row['id_produto'] }}</th>
+        <td> {{ row['nome'] }}</td>
+        <td> {{ row['descricao'] }}</td>
+        <td> {{ row['foto'] }}</td>
+        <td> {{ row['valor_unitario'] }}</td>
         <td><i class="fas fa-edit"></i></td>
         <td><i class="fas fa-trash"></i></td>
       </tr>
+      {% endfor %}
+      {% endif %}
     </tbody>
   </table>
 </div>
