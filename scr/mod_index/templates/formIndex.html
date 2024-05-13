@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-
-    <head>
-        <meta charset="UTF-8">
-        <title>Index</title>
-    </head>
-
-    <body>
-        <h1>Rota da página de Index da nossa WEB APP</h1>
-        <h1>Uso de render_template</h1>
-        <h1>ALEXANDER</h1>
-    </body>
-    
-</html
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="text-center">
+    <h1>Home</h1>
+    <h1>Seja - Bem Vindo</h1>
+    <h2>Pastelaria do Zé</h2>
+    <img src="{{ url_for('static', filename='pastel.png') }}" alt="Pasteis" class="img-fluid mt-3">
+    {% if 'login' in session %}
+    {{ session['nome'] }}, grupo {{ session['grupo'] }}<br>
+    {{ session['token_type'] }}, {{ session['token_validade'] }}<br>
+    Token: {{ session['access_token'] }}
+    {% endif %}
+</div>
+{% endblock %}
