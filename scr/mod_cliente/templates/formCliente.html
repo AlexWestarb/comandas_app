@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Cliente{% endblock %}
+{% block content %}
+<form name="formAdicionar" id="formAdicionar" action method="POST">
+    <h1>Cliente</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="nome">Nome Cliente</label>
+                <input type="text" name="nome" id="nome" value placeholder="Nome do Cliente" maxlength="100" autofocus required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" name="cpf" id="cpf" value placeholder="CPF" maxlength="11" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="tel" name="telefone" id="telefone" value placeholder="Telefone" maxlength="11" required class="form-control">
+            </div>
+        </div>
+    </div>
+    <button type='submit' name='salvaUsuarioDB' id='salvaUsuarioDB' class="btn btn-primary"><i class='fas fa-save'></i> Salvar</button>
+</form>
+{% endblock %}
