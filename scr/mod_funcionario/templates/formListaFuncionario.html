@@ -2,8 +2,9 @@
 {% block title %}Funcionários{% endblock %}
 {% block content %}
 <form action="{{ url_for('funcionario.formFuncionario') }}" method="POST">
-    <h1>Funcionários</h1>
-    <button type="submit" name="formNovo" class="btn btn-primary">Novo Funcionário</button>
+  <h1>Funcionários</h1>
+  <button type="submit" name="formNovo" class="btn btn-primary">Novo
+    Funcionário</button>
 </form>
 <div class="table-responsive">
   <table>
@@ -21,17 +22,21 @@
       </tr>
     </thead>
     <tbody>
+      {% if result %}
+      {% for row in result %}
       <tr>
-        <th scope="row">...</th>
-        <td>...</td>
-        <td>...</td>
-        <td>...</td>
-        <td>...</td>
-        <td>...</td>
-        <td>...</td>
+        <th scope="row"> {{ row['id_funcionario'] }}</th>
+        <td> {{ row['nome'] }}</td>
+        <td> {{ row['matricula'] }}</td>
+        <td> {{ row['cpf'] }}</td>
+        <td> {{ row['telefone'] }}</td>
+        <td> {{ row['grupo'] }}</td>
+        <td> {{ row['senha'] }}</td>
         <td><i class="fas fa-edit"></i></td>
-        <td><i class="fas fa-trash"></i></td>
+        <td><i class='fas fa-trash'></i></td>
       </tr>
+      {% endfor %}
+      {% endif %}
     </tbody>
   </table>
 </div>
