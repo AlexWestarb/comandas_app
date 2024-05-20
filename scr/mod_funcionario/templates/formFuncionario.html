@@ -1,50 +1,74 @@
 {% extends "base.html" %}
+
 {% block title %}Funcionário{% endblock %}
+
+{# ajusta a variáveis conforme novo ou edit #}
+{% set id = result[0].id_funcionario if result else '0' %}
+{% set nome = result[0].nome if result else '' %}
+{% set matricula = result[0].matricula if result else '' %}
+{% set cpf = result[0].cpf if result else '' %}
+{% set telefone = result[0].telefone if result else '' %}
+{% set grupo = result[0].grupo if result else '' %}
+{% set senha = result[0].senha if result else '' %}
+
 {% block content %}
-<form name="formAdicionar" id="formAdicionar" action method="POST">
-    <h1>Funcionário</h1>
+<h3 class="d-flex justify-content-center mb-5">Funcionário - {{ "%s: %s" % ('Editar Registro', id) if result else 'Novo'
+    }}</h3>
+<form name="{{ 'formEditar' if result else 'formAdicionar' }}" id="{{ 'formEditar' if result else 'formAdicionar' }}"
+    class="row was-validated" action="{{ url_for('funcionario.edit') if result else url_for('funcionario.insert') }}"
+    method="POST">
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="id">Código</label>
-                <input type="text" name="id" id="id" value placeholder="Código" readonly class="form-control">
+                <label for="id" class="form-label">Código</label>
+                <input type="text" class="form-control" name="id" id="id" value="{{ id }}" placeholder="Código"
+                    readonly>
             </div>
             <div class="form-group">
-                <label for="nome">Nome Funcionário</label>
-                <input type="text" name="nome" id="nome" value placeholder="Nome Funcionário" maxlength="100" autofocus required class="form-control">
+                <label for="nome" class="form-label">Nome Funcionário</label>
+                <input type="text" name="nome" class="form-control" id="nome" value="{{ nome }}"
+                    placeholder="Nome Funcionário" maxlength="100" autofocus required>
             </div>
             <div class="form-group">
-                <label for="matricula">Matrícula</label>
-                <input type="text" name="matricula" id="matricula" value placeholder="Matrícula" maxlength="10" required class="form-control">
+                <label for="matricula" class="form-label">Matrícula</label>
+                <input type="text" name="matricula" class="form-control" id="matricula" value="{{ matricula }}"
+                    placeholder="Matrícula" maxlength="15" required>
             </div>
             <div class="form-group">
-                <label for="cpf">CPF</label>
-                <input type="text" name="cpf" id="cpf" value placeholder="CPF" maxlength="11" required class="form-control">
+                <label for="cpf" class="form-label">CPF</label>
+                <input type="text" name="cpf" id="cpf" class="form-control" value="{{ cpf }}" placeholder="CPF"
+                    maxlength="15" required>
             </div>
         </div>
+
         <div class="col-md-6">
             <div class="form-group">
-                <label for="telefone">Telefone</label>
-                <input type="tel" name="telefone" id="telefone" value placeholder="Telefone" maxlength="11" required class="form-control">
+                <label for="telefone" class="form-label">Telefone</label>
+                <input type="tel" name="telefone" id="telefone" class="form-control" value="{{ telefone }}"
+                    placeholder="Telefone" maxlength="15" required>
             </div>
             <div class="form-group">
-                <label for="grupo">Grupo</label>
-                <select name="grupo" id="grupo" class="form-select">
-                    <option value="0">Atendente</option>
-                    <option value="1">Caixa</option>
-                    <option value="2">Adm</option>
+                <label for="grupo" class="form-label">Grupo</label>
+                <select name="grupo" id="grupo" aria-label="Grupo" class="form-select">
+                    <option value="0" {{ 'selected' if grupo==0 else '' }}>Atendente</option>
+                    <option value="1" {{ 'selected' if grupo==1 else '' }}>Caixa</option>
+                    <option value="2" {{ 'selected' if grupo==2 else '' }}>Adm</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="senha">Senha</label>
-                <input type="password" name="senha" id="senha" value placeholder="Senha" maxlength="200" required class="form-control">
+                <label for="senha" class="form-label">Senha</label>
+                <input type="password" name="senha" id="senha" class="form-control" value="{{ senha }}"
+                    placeholder="Senha" required>
             </div>
             <div class="form-group">
-                <label for="resenha">reSenha</label>
-                <input type="password" name="resenha" id="resenha" value placeholder="reSenha" maxlength="200" required class="form-control">
+                <label for="resenha" class="form-label">Senha Novamente</label>
+                <input type="password" name="resenha" id="resenha" class="form-control" value="{{ senha }}"
+                    placeholder="Senha" required>
             </div>
         </div>
+        <button type='submit' name='salvaUsuarioDB' id='salvaUsuarioDB' class="btn btn-primary btn-lg"><i
+            class='fas fa-save'></i>
+        Salvar</button>
     </div>
-    <button type='submit' name='salvaUsuarioDB' id='salvaUsuarioDB' class="btn btn-primary"><i class='fas fa-save'></i> Salvar</button>
 </form>
 {% endblock %}

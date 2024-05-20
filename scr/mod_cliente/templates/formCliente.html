@@ -1,24 +1,44 @@
 {% extends "base.html" %}
+
 {% block title %}Cliente{% endblock %}
+
+{# ajusta a variáveis conforme novo ou edit #}
+{% set id = result[0].id_cliente if result else '0' %}
+{% set nome = result[0].nome if result else '' %}
+{% set cpf = result[0].cpf if result else '' %}
+{% set telefone = result[0].telefone if result else '' %}
+
 {% block content %}
-<form name="formAdicionar" id="formAdicionar" action method="POST">
-    <h1>Cliente</h1>
+<h3 class="d-flex justify-content-center mb-5">Cliente - {{ "%s: %s" % ('Editar Registro', id) if result else 'Novo'
+    }}</h3>
+<form name="{{ 'formEditar' if result else 'formAdicionar' }}" id="{{ 'formEditar' if result else 'formAdicionar' }}"
+    class="row was-validated" action="{{ url_for('cliente.edit') if result else url_for('cliente.insert') }}"
+    method="POST">
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
+                <label for="id" class="form-label">Código</label>
+                <input type="text" class="form-control" name="id" id="id" value="{{ id }}" placeholder="Código"
+                    readonly>
+            </div>
+            <div class="form-group">
                 <label for="nome">Nome Cliente</label>
-                <input type="text" name="nome" id="nome" value placeholder="Nome do Cliente" maxlength="100" autofocus required class="form-control">
+                <input type="text" name="nome" id="nome" value="{{ nome }}" placeholder="Nome do Cliente"
+                    maxlength="100" autofocus required class="form-control">
             </div>
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <input type="text" name="cpf" id="cpf" value placeholder="CPF" maxlength="11" required class="form-control">
+                <input type="text" name="cpf" id="cpf" value="{{ cpf }}" placeholder="CPF" maxlength="11" required
+                    class="form-control">
             </div>
             <div class="form-group">
                 <label for="telefone">Telefone</label>
-                <input type="tel" name="telefone" id="telefone" value placeholder="Telefone" maxlength="11" required class="form-control">
+                <input type="tel" name="telefone" id="telefone" value="{{ telefone }}" placeholder="Telefone"
+                    maxlength="11" required class="form-control">
             </div>
         </div>
     </div>
-    <button type='submit' name='salvaUsuarioDB' id='salvaUsuarioDB' class="btn btn-primary"><i class='fas fa-save'></i> Salvar</button>
+    <button type='submit' name='salvaUsuarioDB' id='salvaUsuarioDB' class="btn btn-primary"><i class='fas fa-save'></i>
+        Salvar</button>
 </form>
 {% endblock %}

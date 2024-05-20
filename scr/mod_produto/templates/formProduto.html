@@ -1,28 +1,50 @@
 {% extends "base.html" %}
+
 {% block title %}Produto{% endblock %}
+
+{# ajusta a variáveis conforme novo ou edit #}
+{% set id = result[0].id_produto if result else '0' %}
+{% set nome = result[0].nome if result else '' %}
+{% set descricao = result[0].descricao if result else '' %}
+{% set valor_unitario = result[0].valor_unitario if result else '0' %}
+{% set foto = result[0].foto if result else '' %}
+
 {% block content %}
-<form name="formAdicionar" id="formAdicionar" action method="POST">
-    <h1>Produto</h1>
+<h3 class="d-flex justify-content-center mb-5">Produto - {{ "%s: %s" % ('Editar Registro', id) if result else 'Novo'
+    }}</h3>
+<form name="{{ 'formEditar' if result else 'formAdicionar' }}" id="{{ 'formEditar' if result else 'formAdicionar' }}"
+    class="row was-validated" action="{{ url_for('produto.edit') if result else url_for('produto.insert') }}"
+    method="POST">
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
+                <label for="id" class="form-label">Código</label>
+                <input type="text" class="form-control" name="id" id="id" value="{{ id }}" placeholder="Código"
+                    readonly>
+            </div>
+            <div class="form-group">
                 <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome" value placeholder="Nome do Produto" maxlength="100" autofocus required class="form-control">
+                <input type="text" name="nome" id="nome" value="{{ nome }}" placeholder="Nome do Produto"
+                    maxlength="100" autofocus required class="form-control">
             </div>
             <div class="form-group">
                 <label for="descricao">Descrição</label>
-                <input type="text" name="descricao" id="descricao" value placeholder="Descrição" maxlength="200" class="form-control">
+                <input type="text" name="descricao" id="descricao" value="{{ descricao }}" placeholder="Descrição"
+                    maxlength="200" class="form-control">
             </div>
             <div class="form-group">
                 <label for="valor_unitario">Valor Unitário</label>
-                <input type="text" name="valor_unitario" id="valor_unitario" value placeholder="Valor Unitário" pattern="[0-9]{1,11}(\.[0-9]{1,2})?" required class="form-control">
+                <input type="text" name="valor_unitario" id="valor_unitario" value="{{ valor_unitario }}"
+                    placeholder="Valor Unitário" pattern="[0-9]{1,11}(\.[0-9]{1,2})?" required class="form-control">
             </div>
             <div class="form-group">
                 <label for="foto">Foto</label>
-                <input type="text" name="foto" id="foto" value placeholder="Foto" maxlength="200" required class="form-control">
+                <input type="text" name="foto" id="foto" value="{{ foto }}" placeholder="Foto" maxlength="200" required
+                    class="form-control">
             </div>
         </div>
     </div>
-    <button type='submit' name='salvaUsuarioDB' id='salvaUsuarioDB' class="btn btn-primary"><i class='fas fa-save'></i> Salvar</button>
+    <button type='submit' name='salvaUsuarioDB' id='salvaUsuarioDB' class="btn btn-primary"><i class='fas fa-save'></i>
+        Salvar</button>
 </form>
 {% endblock %}

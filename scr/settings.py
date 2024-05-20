@@ -24,7 +24,8 @@ ENDPOINT_PRODUTO = os.getenv("ENDPOINT_PRODUTO")
 
 # Configurações de segurança
 def getHeadersAPI():
+    token = session.get('access_token', '')
     return {
         'accept': 'application/json',
-        'Authorization': f'Bearer {session['access_token'] if 'access_token' in session else ""}'
+        'Authorization': f'Bearer {token}'
     }
