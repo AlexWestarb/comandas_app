@@ -17,8 +17,6 @@
         <th scope="col">Telefone</th>
         <th scope="col">Grupo</th>
         <th scope="col">Senha</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -32,8 +30,19 @@
         <td> {{ row['telefone'] }}</td>
         <td> {{ row['grupo'] }}</td>
         <td> {{ row['senha'] }}</td>
-        <td><i class="fas fa-edit"></i></td>
-        <td><i class='fas fa-trash'></i></td>
+        <td>
+          <form action="{{ url_for('funcionario.formEditFuncionario') }}" method="POST"
+            name="formEdit{{ row['id_funcionario'] }}">
+            <input type="hidden" name="id" value="{{ row['id_funcionario'] }}">
+            <button type="submit" name="formEditFuncionario" class='btn'><i class="fas fa-edit"></i></button>
+          </form>
+        </td>
+        <td>
+          <form method='POST' name='jsDelete' id='jsDelete'>
+            <input type='hidden' name='id' value="{{ row['id_funcionario'] }}">
+            <button type='submit' name='formDeleteFuncionario' class='btn'><i class='fas fa-trash'></i></button>
+          </form>
+        </td>
       </tr>
       {% endfor %}
       {% endif %}
@@ -46,24 +55,71 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 10px;
   }
+
   table {
     width: 100%;
     border-collapse: collapse;
   }
-  th, td {
+
+  th,
+  td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
   }
+
   th {
     background-color: #f2f2f2;
     font-weight: bold;
   }
+
   tr:nth-child(even) {
     background-color: #f2f2f2;
   }
+
   i {
     cursor: pointer;
   }
 </style>
+{% endblock %}
+{% block js %}
+<script>
+  $("form[name='jsDelete']").submit(function (e) {
+    // parar o envio para poder fazer manualmente
+    e.preventDefault();
+    Swal.fire({
+      title: '', text: "Deseja realmente excluir: " + $(e.target)[0][0].value,
+      icon: 'warning', showCancelButton: true,
+      confirmButtonColor: '#3085d6', cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancelar', confirmButtonText: 'Sim'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deletarFuncionario($(e.target)[0][0].value); // Retorna o valor que está no id
+      }
+    })
+  })
+  // sempre pega a url da barra de endereço
+  $SCRIPT_ROOT = {{ request.script_root | tojson | safe }};
+  function deletarFuncionario(idFuncionario) {
+    $.post($SCRIPT_ROOT + "{{ url_for('funcionario.delete') }}", {
+      id: idFuncionario
+    }, function (data) {
+      if (!data.erro) {
+        Swal.fire({
+          title: '', text: 'ID' + data.msg.id + ', ' + data.msg.msg,
+          icon: 'success', showCancelButton: false,
+          confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: 'OK'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.replace($SCRIPT_ROOT + "{{ url_for('funcionario.formListaFuncionario') }}");
+          }
+        })
+      }
+      else {
+        Swal.fire(data.msgErro.msg, data.msgErro.erro, "error");
+      }
+    }
+    )
+  }
+</script>
 {% endblock %}
