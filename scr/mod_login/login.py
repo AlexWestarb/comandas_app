@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session
 import requests
 from settings import ENDPOINT_TOKEN
@@ -26,14 +27,19 @@ def validaLogin():
         response = requests.post(ENDPOINT_TOKEN, headers=headers, data=data)
         access_token = response.json()
 
+        print("Antes de imprimir o access_token")
+        print(access_token)
+        print(type(access_token))
+        print(access_token.keys())
+        
         if (response.status_code != 200):
             raise Exception(access_token)
 
         # registra os dados do token e do usuário na sessão, armazenando o login do usuário
         session['access_token'] = access_token['access_token']
-        session['expire_minutes'] = access_token['expire_minutes']
+        session['expire_minutes'] = access_token['expires_in']
         session['token_type'] = access_token['token_type']
-        session['token_validade'] = datetime.timestamp( datetime.now() + timedelta(minutes=access_token['expire_minutes']) )
+        session['token_validade'] = datetime.timestamp( datetime.now() + timedelta(minutes=access_token['expires_in']) )
 
         ### futuramente alterar a api para retornar os dados do usuário
         session['nome'] = request.form['usuario']
@@ -56,3 +62,17 @@ def logoff():
     
     # retorna para a tela de login
     return redirect(url_for('login.login'))
+
+# valida se o token esta na sessão e se ainda é 
+def validaToken(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+    
+        if 'token_validade' in session and session['token_validade'] > datetime.timestamp( datetime.now() ):
+            
+            # retorna os dados copiados da função original
+            return f(*args, **kwargs)
+        else:
+            return redirect(url_for('login.login', msgErro='Usuário não logado! Token expirado!'))
+    # retorna o resultado do if acima
+    return decorated_function

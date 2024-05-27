@@ -24,8 +24,10 @@ ENDPOINT_PRODUTO = os.getenv("ENDPOINT_PRODUTO")
 
 # Configurações de segurança
 def getHeadersAPI():
-    token = session.get('access_token', '')
     return {
         'accept': 'application/json',
-        'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {session['access_token'] if 'access_token' in session else ""}'
     }
+
+# Variável para o tempo de sessão - minutos
+TEMPO_SESSION = os.getenv("TEMPO_SESSION")
