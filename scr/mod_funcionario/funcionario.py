@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 import requests
 from funcoes import Funcoes
+from mod_login.login import validaToken
 from settings import getHeadersAPI, ENDPOINT_FUNCIONARIO
 
 bp_funcionario = Blueprint('funcionario', __name__, url_prefix="/funcionario", template_folder='templates')
@@ -24,10 +25,12 @@ def formListaFuncionario():
         return render_template('formListaFuncionario.html', msgErro=e.args[0])
 
 @bp_funcionario.route('/form-funcionario/', methods=['POST'])
+@validaToken
 def formFuncionario():
     return render_template('formFuncionario.html')
 
 @bp_funcionario.route('/insert', methods=['POST'])
+@validaToken
 def insert():
     try:
         # dados enviados via FORM
@@ -49,7 +52,7 @@ def insert():
         print(result) # [{'msg': 'Cadastrado com sucesso!', 'id': 13}, 200]
         print(response.status_code) # 200
         
-        if (response.status_code != 200 or result[1] != 200):
+        if (response.status_code != 200 or result[0] != 200):
             raise Exception(result)
         
         return redirect(url_for('funcionario.formListaFuncionario', msg=result[0]))
@@ -57,6 +60,7 @@ def insert():
         return render_template('formListaFuncionario.html', msgErro=e.args[0])
     
 @bp_funcionario.route("/form-edit-funcionario", methods=['POST'])
+@validaToken
 def formEditFuncionario():
     try:
         # ID enviado via FORM
@@ -77,6 +81,7 @@ def formEditFuncionario():
         return render_template('formListaFuncionario.html', msgErro=e.args[0])
 
 @bp_funcionario.route('/edit', methods=['POST'])
+@validaToken
 def edit():
     try:
         # dados enviados via FORM
@@ -95,7 +100,7 @@ def edit():
         response = requests.put(ENDPOINT_FUNCIONARIO + id_funcionario, headers=getHeadersAPI(), json=payload)
         result = response.json()
         
-        if (response.status_code != 200 or result[1] != 200):
+        if (response.status_code != 200 or result[0] != 200):
             raise Exception(result)
         
         return redirect(url_for('funcionario.formListaFuncionario', msg=result[0]))
@@ -104,6 +109,7 @@ def edit():
         return render_template('formListaFuncionario.html', msgErro=e.args[0])
     
 @bp_funcionario.route('/delete', methods=['POST'])
+@validaToken
 def delete():
     try:
         # dados enviados via FORM
@@ -113,7 +119,7 @@ def delete():
         response = requests.delete(ENDPOINT_FUNCIONARIO + id_funcionario, headers=getHeadersAPI())
         result = response.json()
         
-        if (response.status_code != 200 or result[1] != 200):
+        if (response.status_code != 200 or result[0] != 200):
             raise Exception(result)
         
         return jsonify(erro=False, msg=result[0])
