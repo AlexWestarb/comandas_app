@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 import requests
-from funcoes import Funcoes
+import base64
 from mod_login.login import validaToken
 from settings import getHeadersAPI, ENDPOINT_PRODUTO
 
@@ -25,12 +25,12 @@ def formListaProduto():
         return render_template('formListaProduto.html', msgErro=e.args[0])
 
 @bp_produto.route('/form-produto/', methods=['POST'])
-@validaToken
+# @validaToken
 def formProduto():
     return render_template('formProduto.html')
 
 @bp_produto.route('/insert', methods=['POST'])
-@validaToken
+# @validaToken
 def insert():
     try:
         # dados enviados via FORM
@@ -38,7 +38,8 @@ def insert():
         nome = request.form['nome']
         descricao = request.form['descricao']
         valor_unitario = request.form['valor_unitario']
-        foto = request.form['foto']
+        # converte em base64
+        foto = "data:" + request.files['foto'].content_type + ";base64," + str(base64.b64encode(request.files['foto'].read()), "utf-8")
         
         # monta o JSON para envio a API
         payload = {'id_produto': id_produto, 'nome': nome, 'descricao': descricao, 'valor_unitario': valor_unitario, 'foto': foto}
@@ -58,7 +59,7 @@ def insert():
         return render_template('formListaProduto.html', msgErro=e.args[0])
     
 @bp_produto.route("/form-edit-produto", methods=['POST'])
-@validaToken
+# @validaToken
 def formEditProduto():
     try:
         # ID enviado via FORM
@@ -79,7 +80,7 @@ def formEditProduto():
         return render_template('formListaProduto.html', msgErro=e.args[0])
 
 @bp_produto.route('/edit', methods=['POST'])
-@validaToken
+# @validaToken
 def edit():
     try:
         # dados enviados via FORM
@@ -87,7 +88,8 @@ def edit():
         nome = request.form['nome']
         descricao = request.form['descricao']
         valor_unitario = request.form['valor_unitario']
-        foto = request.form['foto']
+        # converte em base64
+        foto = "data:" + request.files['foto'].content_type + ";base64," + str(base64.b64encode(request.files['foto'].read()), "utf-8")
         
         # monta o JSON para envio a API
         payload = {'id_produto': id_produto, 'nome': nome, 'descricao': descricao, 'valor_unitario': valor_unitario, 'foto': foto}
@@ -105,7 +107,7 @@ def edit():
         return render_template('formListaProduto.html', msgErro=e.args[0])
     
 @bp_produto.route('/delete', methods=['POST'])
-@validaToken
+# @validaToken
 def delete():
     try:
         # dados enviados via FORM
