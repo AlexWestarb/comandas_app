@@ -12,8 +12,8 @@
         <th scope="col">#</th>
         <th scope="col">Nome</th>
         <th scope="col">Descrição</th>
+        <th scope="col">Valor Un.</th>
         <th scope="col">Foto</th>
-        <th scope="col">Valor unitário</th>
       </tr>
     </thead>
     <tbody>
@@ -23,8 +23,8 @@
         <th scope="row"> {{ row['id_produto'] }}</th>
         <td> {{ row['nome'] }}</td>
         <td> {{ row['descricao'] }}</td>
-        <td> {{ row['foto'] }}</td>
         <td> {{ row['valor_unitario'] }}</td>
+        <td><img src="{{ row['foto'] }}" width="100" id="myImg"></td>
         <td>
           <form action="{{ url_for('produto.formEditProduto') }}" method="POST"
             name="formEdit{{ row['id_produto'] }}">
