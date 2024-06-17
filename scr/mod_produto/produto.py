@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from io import BytesIO
+from flask import Blueprint, render_template, request, redirect, send_file, url_for, jsonify
 import requests
 import base64
 from mod_login.login import validaToken
+from geraPdf import PDFGenerator
 from settings import getHeadersAPI, ENDPOINT_PRODUTO
 
 bp_produto = Blueprint('produto', __name__, url_prefix="/produto", template_folder='templates')
@@ -24,13 +26,35 @@ def formListaProduto():
     except Exception as e:
         return render_template('formListaProduto.html', msgErro=e.args[0])
 
+@bp_produto.route('/generate_pdf')
+def generate_pdf():
+    try:
+        response = requests.get(ENDPOINT_PRODUTO, headers=getHeadersAPI())
+        result = response.json()
+
+        if response.status_code != 200:
+            raise Exception(result)
+
+        pdf_gen = PDFGenerator()
+        pdf_gen.generate_pdf_produtos(result[0])
+
+        buffer = BytesIO()
+        with open('pdfProdutos.pdf', 'rb') as f:
+            buffer.write(f.read())
+
+        buffer.seek(0)
+        return send_file(buffer, as_attachment=True, download_name='pdfProdutos.pdf', mimetype='application/pdf')
+
+    except Exception as e:
+        return str(e)
+
 @bp_produto.route('/form-produto/', methods=['POST'])
-# @validaToken
+@validaToken
 def formProduto():
     return render_template('formProduto.html')
 
 @bp_produto.route('/insert', methods=['POST'])
-# @validaToken
+@validaToken
 def insert():
     try:
         # dados enviados via FORM
@@ -59,7 +83,7 @@ def insert():
         return render_template('formListaProduto.html', msgErro=e.args[0])
     
 @bp_produto.route("/form-edit-produto", methods=['POST'])
-# @validaToken
+@validaToken
 def formEditProduto():
     try:
         # ID enviado via FORM
@@ -80,7 +104,7 @@ def formEditProduto():
         return render_template('formListaProduto.html', msgErro=e.args[0])
 
 @bp_produto.route('/edit', methods=['POST'])
-# @validaToken
+@validaToken
 def edit():
     try:
         # dados enviados via FORM
@@ -107,7 +131,7 @@ def edit():
         return render_template('formListaProduto.html', msgErro=e.args[0])
     
 @bp_produto.route('/delete', methods=['POST'])
-# @validaToken
+@validaToken
 def delete():
     try:
         # dados enviados via FORM
