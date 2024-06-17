@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from io import BytesIO
+from flask import Blueprint, render_template, request, redirect, send_file, url_for, jsonify
 import requests
 from funcoes import Funcoes
 from mod_login.login import validaToken
+from geraPdf import PDFGenerator
 from settings import getHeadersAPI, ENDPOINT_FUNCIONARIO
 
 bp_funcionario = Blueprint('funcionario', __name__, url_prefix="/funcionario", template_folder='templates')
@@ -23,6 +25,28 @@ def formListaFuncionario():
         return render_template('formListaFuncionario.html', result=result[0])
     except Exception as e:
         return render_template('formListaFuncionario.html', msgErro=e.args[0])
+
+@bp_funcionario.route('/generate_pdf')
+def generate_pdf():
+    try:
+        response = requests.get(ENDPOINT_FUNCIONARIO, headers=getHeadersAPI())
+        result = response.json()
+
+        if response.status_code != 200:
+            raise Exception(result)
+
+        pdf_gen = PDFGenerator()
+        pdf_gen.generate_pdf_funcionarios(result[0])
+
+        buffer = BytesIO()
+        with open('pdfFuncionarios.pdf', 'rb') as f:
+            buffer.write(f.read())
+
+        buffer.seek(0)
+        return send_file(buffer, as_attachment=True, download_name='pdfFuncionarios.pdf', mimetype='application/pdf')
+
+    except Exception as e:
+        return str(e)
 
 @bp_funcionario.route('/form-funcionario/', methods=['POST'])
 @validaToken

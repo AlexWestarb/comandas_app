@@ -6,6 +6,7 @@
     <h1>Seja - Bem Vindo</h1>
     <h2>Pastelaria do Zé</h2>
     <img src="{{ url_for('static', filename='pastel.png') }}" alt="Pasteis" class="img-fluid mt-3">
+    <br>
     {% if 'login' in session %}
     {{ session['nome'] }}, grupo {{ session['grupo'] }}<br>
     {{ session['token_type'] }}, {{ session['token_validade'] }}<br>
